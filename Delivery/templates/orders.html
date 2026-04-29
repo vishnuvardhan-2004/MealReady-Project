@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body class="order-page">
+<div class="order-container">
+
+    <!-- SUCCESS HEADER -->
+    <div class="order-header">
+        <h1>Thank you for your order, {{ username }}! 🎉</h1>
+        <p>💳 Your payment was successful.</p>
+    </div>
+
+    <!-- ORDER CARD -->
+    <div class="order-card">
+
+        <div class="order-section">
+            <h2>📦 Delivery Address</h2>
+            <p class="order-address">{{ delivery_address }}</p>
+        </div>
+        <div class="order-section">
+            <p class="order-message">
+                🎉 Your order has been placed successfully!<br>
+                🚚 Your delicious meal is on the way and will be delivered to your location shortly 🍽️.<br>
+                Thank you for choosing <strong>MealReady</strong> Website for ordering your delicious food.
+            </p>
+        </div>
+
+        <div class="order-actions">
+            <a href="{% url 'customer_home' username %}" class="home-btn">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

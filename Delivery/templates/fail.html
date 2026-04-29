@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign-In Failed Page</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    </head>
+    <body class="signin-fail-page">
+        <h2>Sign-In Failed</h2>
+        <p>Invalid Username or password. Please try again with correct details</p>
+        <a href="{% url 'signin' %}">Login</a>
+        <a href="{% url 'signup' %}">Sign Up</a>
+        <a href="{% url 'index' %}">Go back to Home</a>
+    </body>
+</html>

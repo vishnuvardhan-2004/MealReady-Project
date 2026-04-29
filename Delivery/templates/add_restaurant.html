@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adding Restaurant Page</title>    
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <h3>Adding New Restaurant</h3>
+    <br>
+    <form action={% url "add_restaurant" %} method = "POST">
+        {% csrf_token %}
+        <label>Restaurant name </label>
+        <input type="text" name="name">
+        <br><br>
+        <label>Picture url </label>
+        <input type="text" name="picture">
+        <br><br>
+        <label>Cuisine </label>
+        <input type="text" name="cuisine">
+        <br><br>
+        <label>Rating</label>
+        <input type="number" name="rating" min="0" max="5" step="0.5">
+        <br><br>
+        <label>Location </label>
+        <input type="text" name="location">
+        <br><br>
+        <label>Mobile Number</label>
+        <input type="number" name="mobile">
+        <br><br>
+        <button type="submit">Add Restaurant</button>
+    </form>
+    {% if success %}
+        <p style="color: green; font-weight: bold; margin-top: 20px;">
+            Restaurant added successfully!
+        </p>
+
+        <a href="{% url 'open_show_restaurant' %}" class="admin-btn">
+            Show Restaurants
+        </a>
+        <br>
+    {% endif %}
+    {% if error %}
+        <p style="color: red; font-weight: bold;">
+            {{ error }}
+        </p>
+    {% endif %}
+</body>
+</html>

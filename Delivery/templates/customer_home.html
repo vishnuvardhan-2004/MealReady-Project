@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Home Page</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body class="customer-home">
+    <h3>Welcome {{username}} 😊</h3>
+    <form method="get" class="search-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search restaurants..."
+            value="{{ request.GET.q }}"
+        >
+        <button type="submit">Search</button>
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Restaurant name</th>
+                <th>Picture</th>
+                <th>Cuisine</th>
+                <th>Rating</th>
+                <th>Contact
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if restaurantList %}
+            {% for r in restaurantList %}
+            <tr>
+                <td>{{ r.name }}</td>
+                <td>
+                    <img src="{{ r.picture }}" width="100">
+                </td>
+                <td>{{ r.cuisine }}</td>
+                <td>⭐{{ r.rating }}</td>
+                <td>
+                    <a href="tel:{{ r.mobile }}" style="
+                        background-color: #28a745;
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        font-weight: bold;
+                    ">
+                        📞 Call Now
+                    </a>
+                </td>
+                <td>
+                    <button>
+                        <a href="{% url 'view_menu' r.id username %}" style="color:white; text-decoration:none;">
+                            View Menu
+                        </a>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6">No restaurants found 🍽️</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>

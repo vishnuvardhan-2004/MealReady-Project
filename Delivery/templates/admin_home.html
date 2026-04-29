@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home Page</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body> 
+    <div class="admin-container">
+        <h3>Welcome Admin 😊</h3>
+        <a href="{% url 'open_add_restaurant' %}">Add New Restaurant</a>
+        <br><br>
+        <a href="{% url 'open_show_restaurant' %}">Show Restaurants</a>
+        <br><br>
+    </div>
+</body>
+</html>
