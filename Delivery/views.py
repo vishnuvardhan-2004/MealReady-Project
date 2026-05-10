@@ -81,9 +81,10 @@ def customer_home(request, username):
         'username': username
     })
 
-# Add Restaurant
+# Open Add Restaurant Page
 def open_add_restaurant(request):
     return render(request, 'add_restaurant.html')
+
 
 def add_restaurant(request):
     if request.method == 'POST':
@@ -94,9 +95,24 @@ def add_restaurant(request):
         location = request.POST.get('location')
         mobile = request.POST.get('mobile')
 
+        if not name or not picture or not cuisine or not rating or not location or not mobile:
+            return render(request, 'add_restaurant.html', {
+                'error': 'Please fill all details.'
+            })
+
         if Restaurant.objects.filter(name=name).exists():
             return render(request, 'add_restaurant.html', {
-                'error': 'Duplicate restaurant name.'
+                'error': 'Restaurant name already exists.'
+            })
+
+        if Restaurant.objects.filter(mobile=mobile).exists():
+            return render(request, 'add_restaurant.html', {
+                'error': 'Mobile number already exists.'
+            })
+
+        if len(str(mobile)) != 10:
+            return render(request, 'add_restaurant.html', {
+                'error': 'Mobile number must contain 10 digits.'
             })
 
         Restaurant.objects.create(
@@ -107,12 +123,9 @@ def add_restaurant(request):
             location=location,
             mobile=mobile,
         )
-
         return render(request, 'add_restaurant.html', {
             'success': True
         })
-
-    # GET request
     return render(request, 'add_restaurant.html')
 
 # Open Show Restaurant Page
