@@ -1,105 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout Page</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-</head>
-<body class="checkout-page">
-<div class="checkout-container">
-
-    <!-- HEADER -->
-    <div class="checkout-header">
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body class="checkout-page">
+    <div class="checkout-container">
+      <!-- HEADER -->
+      <div class="checkout-header">
         <h1>Checkout</h1>
         <p>Welcome, <strong>{{ username }} </strong></p>
-    </div>
-    {% if error %}
-        <p class="checkout-error">{{ error }}</p>
-    {% else %}
+      </div>
 
-    <!-- ORDER SUMMARY -->
-    <div class="checkout-card">
+      {% if error %}
+      <div class="empty-checkout">
+        <div class="empty-checkout-icon">🛒</div>
+        <h2>Your Cart is Empty</h2>
+        <p>Browse restaurants and add some delicious food to your cart!</p>
+        <a href="{% url 'customer_home' username %}" class="browse-checkout-btn">
+          🍽️ Browse Restaurants
+        </a>
+      </div>
+      {% else %}
+
+      <!-- ORDER SUMMARY -->
+      <div class="checkout-card">
         <table class="checkout-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Price (₹)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cart_item in cart_items %}
-                <tr>
-                    <td>{{ cart_item.item.name }}</td>
-                    <td>{{ cart_item.quantity }}</td>
-                    <td>₹ {{ cart_item.total_price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cart_item in cart_items %}
+            <tr>
+              <td>{{ cart_item.item.name }}</td>
+              <td>{{ cart_item.quantity }}</td>
+              <td>₹ {{ cart_item.total_price }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
         <div class="address-box">
-            <label for="address">Delivery Address</label>
-            <textarea
-                id="address"
-                placeholder="Enter your delivery address"
-                required></textarea>
+          <label for="address">Delivery Address</label>
+          <textarea
+            id="address"
+            placeholder="Enter your delivery address"
+            required
+          ></textarea>
         </div>
         <div class="checkout-footer">
-            <h2>Total: ₹ {{ total_price }}</h2>
-            <button id="rzp-button" class="pay-btn">
-                Pay with Razorpay
-            </button>
+          <h2>Total: ₹ {{ total_price }}</h2>
+          <button id="rzp-button" class="pay-btn">Pay with Razorpay</button>
         </div>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
-</div>
 
-<script>
-    var options = {
-        "key": "{{ razorpay_key_id }}",
-        "amount": "{{ total_price|floatformat:2 }}00",
-        "currency": "INR",
-        "name": "MealReady",
-        "description": "Order Payment",
-        "order_id": "{{ order_id }}",
-        "handler": function (response) {
-            alert("Payment Successful!");
-            window.location.href = "{% url 'orders' username %}";
+    <script>
+      var options = {
+        key: "{{ razorpay_key_id }}",
+        amount: "{{ total_price|floatformat:2 }}00",
+        currency: "INR",
+        name: "MealReady",
+        description: "Order Payment",
+        order_id: "{{ order_id }}",
+        handler: function (response) {
+          alert("Payment Successful!");
+          window.location.href = "{% url 'orders' username %}";
         },
-        "prefill": {
-            "name": "{{ username }}",
-            "email": "customer@example.com",
-            "contact": "8899882277"
+        prefill: {
+          name: "{{ username }}",
+          email: "customer@example.com",
+          contact: "8899882277",
         },
-        "theme": {
-            "color": "#528FF0"
-        }
-    };
+        theme: {
+          color: "#528FF0",
+        },
+      };
 
-    var rzp = new Razorpay(options);
+      var rzp = new Razorpay(options);
 
-    document.getElementById("rzp-button").onclick = function (e) {
+      document.getElementById("rzp-button").onclick = function (e) {
         e.preventDefault();
         const address = document.getElementById("address").value.trim();
         if (!address) {
-            alert("Please enter delivery address");
-            return;
+          alert("Please enter delivery address");
+          return;
         }
         fetch("{% url 'save_address' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({ address: address })
-        })
-        .then(() => {
-            rzp.open();
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ address: address }),
+        }).then(() => {
+          rzp.open();
         });
-    };
-</script>
-</body>
+      };
+    </script>
+  </body>
 </html>
